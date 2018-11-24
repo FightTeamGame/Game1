@@ -3,17 +3,22 @@ const {ccclass, property} = cc._decorator;
 const SPEED_FAC = 400;
 const MOVE_DURATION = 1;
 const FRICTION_FORCE = 500;
+const EGG_SPEED = 200;
 const FRICTION_INS_FAC = 900;
 const MIN_SPEED = 50;
 const GRAVITY = 30;
 
 import InGame from './InGame';
+import Egg from './Egg';
 
 @ccclass
 export default class NewClass extends cc.Component {
 
   @property(cc.Node)
   world:cc.Node = null;
+
+  @property(cc.Prefab)
+  eggPrefab: cc.Prefab = null;
 
   speed:number;
   direction:cc.Vec2;
@@ -35,6 +40,10 @@ export default class NewClass extends cc.Component {
   }
 
   shoot (vec:cc.Vec2) {
+    if (vec.x === 0 && vec.y === 0) {
+      return;
+    }
+    
     // this.startPos = this.node.position.clone();
     this.direction = vec.normalize();
 
@@ -42,6 +51,21 @@ export default class NewClass extends cc.Component {
     // this.moveTime = 0;
     this.isMoving = true;
     this.frictionForce = FRICTION_FORCE;
+
+    // shoot egg
+    let eggDirection = this.direction.mul(-1);
+    let egg = this.spawnEgg(eggDirection);
+    egg.getComponent(Egg).shoot();
+  }
+
+  spawnEgg (direction:cc.Vec2) : cc.Node {
+    let egg = cc.instantiate(this.eggPrefab);
+    this.world.addChild(egg);
+    egg.getComponent(Egg).speed = EGG_SPEED;
+    egg.getComponent(Egg).direction = direction;
+    egg.x = this.node.x;
+    egg.y = this.node.y -this.node.height / 2;
+    return egg;
   }
 
   calculateStopPosition (vec:cc.Vec2) : cc.Vec2 {
