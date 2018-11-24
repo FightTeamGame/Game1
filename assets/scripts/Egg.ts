@@ -45,7 +45,6 @@ export default class NewClass extends cc.Component {
     }
 
     onDestroy () {
-    console.log('CHET TUI')
     }
 
     update (dt) {

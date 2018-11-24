@@ -8,8 +8,10 @@ const FRICTION_INS_FAC = 900;
 const MIN_SPEED = 50;
 const GRAVITY = 30;
 
+
 import InGame from './InGame';
 import Egg from './Egg';
+import * as Ultil from './Ultil';
 
 @ccclass
 export default class NewClass extends cc.Component {
@@ -43,7 +45,7 @@ export default class NewClass extends cc.Component {
     if (vec.x === 0 && vec.y === 0) {
       return;
     }
-    
+
     // this.startPos = this.node.position.clone();
     this.direction = vec.normalize();
 
@@ -139,5 +141,13 @@ export default class NewClass extends cc.Component {
     this.node.y -= GRAVITY * dt;
 
     this.handleEdgeCollision();
+  }
+
+  onCollisionEnter (other, self) {
+    switch (other.tag) {
+      case Ultil.CollisionEntity.Trap: {
+        this.speed = 0;
+      } break;
+    }
   }
 }
