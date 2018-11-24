@@ -21,14 +21,19 @@ export default class NewClass extends cc.Component {
     }
 
     onTouchMove(touch:cc.Event.EventTouch) {
+      let startLoc = this.node.convertToNodeSpaceAR(touch.getStartLocation());
       let loc = this.node.convertToNodeSpaceAR(touch.getLocation());
+      
       let stopPos = this.player.getComponent(Player).calculateStopPosition(loc);
       this.hintPoint.position = stopPos;
     }
 
     onTouchEnd (touch: cc.Event.EventTouch) {
+      let startLoc = this.node.convertToNodeSpaceAR(touch.getStartLocation());
       let loc = this.node.convertToNodeSpaceAR(touch.getLocation());
-      this.player.getComponent(Player).shoot(loc);
+      let vec = new cc.Vec2(loc.x - startLoc.x, loc.y - startLoc.y);
+      vec = vec.mul(-1);
+      this.player.getComponent(Player).shoot(vec);
     }
 
     start () {
@@ -38,4 +43,12 @@ export default class NewClass extends cc.Component {
     update (dt) {
       // this.car.x += 100 * dt;
     }
+
+    getLeftEdgeX () {
+      return -this.node.width / 2;
+    }
+  
+    getRightEdgeX () {
+      return this.node.width / 2;
+    }  
 }
