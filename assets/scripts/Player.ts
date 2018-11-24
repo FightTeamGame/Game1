@@ -22,6 +22,9 @@ export default class NewClass extends cc.Component {
   @property(cc.Prefab)
   eggPrefab: cc.Prefab = null;
 
+  @property(cc.Node)
+  camera:cc.Node = null;
+
   speed:number;
   direction:cc.Vec2;
   moveTime:number;
@@ -67,6 +70,8 @@ export default class NewClass extends cc.Component {
     egg.getComponent(Egg).direction = direction;
     egg.x = this.node.x;
     egg.y = this.node.y -this.node.height / 2;
+
+    this.camera.getComponent(cc.Camera).addTarget(egg);
     return egg;
   }
 

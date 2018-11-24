@@ -14,6 +14,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Prefab)
     trapPrefab:cc.Prefab = null;
 
+    @property(cc.Node)
+    camera:cc.Node = null;
+
     trapCoords: cc.Vec2[][];
     level:number;
 
@@ -54,6 +57,7 @@ export default class NewClass extends cc.Component {
         let trap = cc.instantiate(this.trapPrefab);
         this.node.addChild(trap);
         trap.position = trapCoord;
+        this.camera.getComponent(cc.Camera).addTarget(trap);
       }
     }
 
