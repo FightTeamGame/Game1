@@ -26,10 +26,14 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     goal:cc.Node = null;
 
+    @property(cc.Prefab)
+    arrowPrefab:cc.Prefab = null;
+
     trapCoords: cc.Vec2[][];
     level:number;
     eggCount:number;
     eggCounts:cc.Node[] = [];
+    arrow:cc.Node = null;
 
     onLoad () {
       this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart.bind(this));
@@ -49,6 +53,11 @@ export default class NewClass extends cc.Component {
 
       // setup goal
       this.goal.y = 2640;
+
+      //create arrow
+      this.arrow = cc.instantiate(this.arrowPrefab);
+      this.node.addChild(this.arrow);
+      this.arrow.active = false;
     }
 
     initTrapCoords () {
@@ -80,8 +89,15 @@ export default class NewClass extends cc.Component {
       let startLoc = this.node.convertToNodeSpaceAR(touch.getStartLocation());
       let loc = this.node.convertToNodeSpaceAR(touch.getLocation());
       
-      let stopPos = this.player.getComponent(Player).calculateStopPosition(loc);
-      this.hintPoint.position = stopPos;
+      let vec = new cc.Vec2(startLoc.x - loc.x, startLoc.y - loc.y);
+
+      // show arrow
+      let arrowAngle = Math.atan2(vec.y, vec.x) * 180 / Math.PI;
+      this.arrow.rotation = -(arrowAngle - 90);
+      this.arrow.active = true;
+      this.arrow.anchorY = 1;
+      this.arrow.height = vec.mag();
+      this.arrow.position = startLoc;
     }
 
     onTouchEnd (touch: cc.Event.EventTouch) {
@@ -90,6 +106,9 @@ export default class NewClass extends cc.Component {
       let vec = new cc.Vec2(loc.x - startLoc.x, loc.y - startLoc.y);
       vec = vec.mul(-1);
       this.player.getComponent(Player).shoot(vec);
+
+      // hide arrow
+      this.arrow.active = false;
     }
 
     update (dt) {
