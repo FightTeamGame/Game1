@@ -17,8 +17,19 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     camera:cc.Node = null;
 
+    @property(cc.Prefab)
+    eggPrefab:cc.Prefab = null;
+
+    @property(cc.Label)
+    eggCountLabel: cc.Label = null;
+
+    @property(cc.Node)
+    goal:cc.Node = null;
+
     trapCoords: cc.Vec2[][];
     level:number;
+    eggCount:number;
+    eggCounts:cc.Node[] = [];
 
     onLoad () {
       this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart.bind(this));
@@ -31,21 +42,22 @@ export default class NewClass extends cc.Component {
 
     start () {
       this.level = 0;
+      this.eggCount = 5;
       this.initTrapCoords();
       this.spawnTrapCoords();
+      this.drawEggCount();
+
+      // setup goal
+      this.goal.y = 2640;
     }
 
     initTrapCoords () {
       this.trapCoords = [
         [
-          new cc.Vec2(100, 100),
-          new cc.Vec2(-100, 200),
-          new cc.Vec2(100, 300),
-          new cc.Vec2(-100, 400),
-          new cc.Vec2(100, 500),
-          new cc.Vec2(-100, 600),
-          new cc.Vec2(100, 700),
-          new cc.Vec2(-100, 800),
+          new cc.Vec2(-271, 904),
+          new cc.Vec2(195, 1418),
+          new cc.Vec2(273, 1696),
+          new cc.Vec2(-229, 2344),
         ],
         [
         ]
@@ -81,7 +93,15 @@ export default class NewClass extends cc.Component {
     }
 
     update (dt) {
-      // this.car.x += 100 * dt;
+      if (this.checkWin()) {
+        cc.game.pause();
+        return;
+      }
+
+      if (this.checkLoss()) {
+        cc.game.pause();
+        return;
+      }
     }
 
     getLeftEdgeX () {
@@ -90,5 +110,45 @@ export default class NewClass extends cc.Component {
   
     getRightEdgeX () {
       return this.node.width / 2;
-    }  
+    }
+
+    decreaseEgg (count) {
+      if (this.eggCount > 0) {
+        this.eggCount -= count;
+      }
+
+      if (this.eggCount < 0) {
+        this.eggCount = 0;
+      }
+
+      this.drawEggCount();
+    }
+
+    drawEggCount () {
+      this.clearEggCount();
+      this.eggCountLabel.string = this.eggCount.toString();
+      for (let i = 0; i < this.eggCount; i++) {
+        let egg = cc.instantiate(this.eggPrefab);
+        let y = this.node.height / 2 - 50 - i * (egg.height + 10);
+        let x = this.node.width / 2 - egg.width / 2 - 10;
+        egg.position = new cc.Vec2(x, y);
+        this.node.addChild(egg);
+        this.eggCounts.push(egg);
+      } 
+    }
+
+    clearEggCount () {
+      for (let egg of this.eggCounts) {
+        egg.removeFromParent();
+        egg.destroy();
+      }
+    }
+
+    checkWin () {
+      return this.player.y >= this.goal.y;
+    }
+
+    checkLoss () {
+      return this.eggCount === 0 && this.player.y < this.goal.y;
+    }
 }

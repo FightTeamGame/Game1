@@ -61,6 +61,7 @@ export default class NewClass extends cc.Component {
     let eggDirection = this.direction.mul(-1);
     let egg = this.spawnEgg(eggDirection);
     egg.getComponent(Egg).shoot();
+    this.world.getComponent(InGame).decreaseEgg(1);
   }
 
   spawnEgg (direction:cc.Vec2) : cc.Node {
