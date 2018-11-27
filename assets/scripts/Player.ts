@@ -6,7 +6,7 @@ const FRICTION_FORCE = 500;
 const EGG_SPEED = 200;
 const FRICTION_INS_FAC = 900;
 const MIN_SPEED = 50;
-const GRAVITY = 30;
+const GRAVITY = 60;
 
 
 import InGame from './InGame';
@@ -31,6 +31,7 @@ export default class NewClass extends cc.Component {
   isMoving:boolean;
   startPos:cc.Vec2;
   frictionForce:number;
+  isShooted:boolean;
 
   onLoad () {
   }
@@ -42,6 +43,7 @@ export default class NewClass extends cc.Component {
     this.isMoving = false;
     this.startPos = this.node.position.clone();
     this.frictionForce = FRICTION_FORCE;
+    this.isShooted = false;
   }
 
   shoot (vec:cc.Vec2) {
@@ -62,6 +64,11 @@ export default class NewClass extends cc.Component {
     let egg = this.spawnEgg(eggDirection);
     egg.getComponent(Egg).shoot();
     this.world.getComponent(InGame).decreaseEgg(1);
+
+    // rotate
+    let angle = Math.atan2(this.direction.y, this.direction.x) * 180 / Math.PI;
+    this.node.rotation = -(angle - 90);
+    this.isShooted = false;
   }
 
   spawnEgg (direction:cc.Vec2) : cc.Node {
@@ -142,6 +149,14 @@ export default class NewClass extends cc.Component {
     // }
     this.speed = this.speed < 0 ? 0 : this.speed;
     // }
+
+    // rotate
+    if (this.speed <= 100 && !this.isShooted) {
+      this.isShooted = true;
+      let actRotate = cc.rotateTo(0.2, 0);
+      // let sequence = cc.sequence(actRotate, cc.callFunc(() => {this.isRotating = false}, this))
+      this.node.runAction(actRotate);
+    }
 
     // fall
     this.node.y -= GRAVITY * dt;
