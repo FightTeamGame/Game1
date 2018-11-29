@@ -8,10 +8,10 @@ const MIN_SPEED = 50;
 const GRAVITY = 60;
 
 
-import InGame from './InGame';
-import Egg from './Egg';
-import * as Ultil from './Ultil';
-import GameSetting from './GameSetting';
+import InGame from '../Controllers/InGame';
+import Egg from '../Models/Egg';
+import * as Ultil from '../Controllers/Ultil';
+import GameSetting from '../Controllers/GameSetting';
 
 @ccclass
 export default class NewClass extends cc.Component {

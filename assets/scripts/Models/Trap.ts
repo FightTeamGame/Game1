@@ -1,7 +1,7 @@
 
 const {ccclass, property} = cc._decorator;
 
-import * as Ultil from './Ultil';
+import * as Ultil from '../Controllers/Ultil';
 
 @ccclass
 export default class NewClass extends cc.Component {

@@ -1,7 +1,7 @@
 
 const {ccclass, property} = cc._decorator;
 
-import InGame from './InGame';
+import InGame from '../Controllers/InGame';
 
 const MIN_SPEED = 5;
 

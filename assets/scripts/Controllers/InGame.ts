@@ -1,4 +1,4 @@
-import Player from './Player';
+import Player from '../Models/Player';
 
 const {ccclass, property} = cc._decorator;
 
