@@ -36,6 +36,9 @@ export default class NewClass extends cc.Component {
     arrow:cc.Node = null;
     hintPoints:cc.Node[] = [];
 
+    touchStartLoc:cc.Vec2 = null;
+    touchEndLoc:cc.Vec2 = null;
+
     onLoad () {
       this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart.bind(this));
       this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove.bind(this));
@@ -92,16 +95,12 @@ export default class NewClass extends cc.Component {
     }
 
     onTouchStart () {
+      this.showHintPoint();
     }
 
     onTouchMove(touch:cc.Event.EventTouch) {
-      let startLoc = this.node.convertToNodeSpaceAR(touch.getStartLocation());
-      let loc = this.node.convertToNodeSpaceAR(touch.getLocation());
-      
-      let vec = new cc.Vec2(startLoc.x - loc.x, startLoc.y - loc.y);
-
-      // show hint point
-      this.showHintPoint(vec, this.player.position);
+      this.touchStartLoc = touch.getStartLocation();
+      this.touchEndLoc = touch.getLocation();
 
       // show arrow
       // let arrowAngle = Math.atan2(vec.y, vec.x) * 180 / Math.PI;
@@ -136,6 +135,8 @@ export default class NewClass extends cc.Component {
         cc.game.pause();
         return;
       }
+
+      this.drawHintPoint(this.player.position);
     }
 
     getLeftEdgeX () {
@@ -186,14 +187,21 @@ export default class NewClass extends cc.Component {
       return this.eggCount === 0 && this.player.y < this.goal.y;
     }
 
-    showHintPoint (vec:cc.Vec2, startPoint:cc.Vec2) {
+    drawHintPoint (rootPoint:cc.Vec2) {
+      let vec = new cc.Vec2(this.touchStartLoc.x - this.touchEndLoc.x, this.touchStartLoc.y - this.touchEndLoc.y);
+
       let length = vec.mag();
       let distance = length / this.hintPoints.length;
 
       for (let i = 0; i < this.hintPoints.length; i++) {
-        this.hintPoints[i].active = true;
-        let point = vec.normalize().mul(i * distance).add(startPoint);
+        let point = vec.normalize().mul(i * distance).add(rootPoint);
         this.hintPoints[i].position = point;
+      }
+    }
+
+    showHintPoint () {
+      for (let hint of this.hintPoints) {
+        hint.active = true;
       }
     }
 
