@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "8afee4e1-1032-4015-96cf-4fdafdb35df7",
+  "atlasJson": "{\"width\":512,\"imagePath\":\"Fly_tex.png\",\"height\":512,\"name\":\"Fly\",\"SubTexture\":[{\"width\":34,\"y\":1,\"height\":59,\"name\":\"Mong\",\"x\":471},{\"width\":81,\"y\":319,\"height\":34,\"name\":\"ChanTrai\",\"x\":139},{\"width\":81,\"y\":463,\"height\":34,\"name\":\"chanphai\",\"x\":1},{\"width\":83,\"y\":237,\"height\":75,\"name\":\"DuiTrai\",\"x\":386},{\"width\":83,\"y\":237,\"height\":75,\"name\":\"DuiPhai\",\"x\":301},{\"width\":157,\"y\":376,\"height\":85,\"name\":\"CanhPhai\",\"x\":1},{\"width\":160,\"y\":237,\"height\":80,\"name\":\"CanhTrai\",\"x\":139},{\"width\":201,\"y\":1,\"height\":234,\"name\":\"Bung\",\"x\":1},{\"width\":136,\"y\":237,\"height\":137,\"name\":\"Dau\",\"x\":1},{\"width\":23,\"y\":62,\"height\":53,\"name\":\"Mo\",\"x\":471},{\"width\":24,\"y\":117,\"height\":39,\"name\":\"MatTrai\",\"x\":471},{\"width\":23,\"y\":158,\"height\":39,\"name\":\"MatPhai\",\"x\":471}]}",
+  "texture": "f84e9eb4-3723-4f7f-9bf5-260c7c2f82bd",
+  "subMetas": {}
+}
