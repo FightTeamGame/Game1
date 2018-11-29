@@ -8,8 +8,8 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     player:cc.Node = null;
 
-    @property(cc.Node)
-    hintPoint:cc.Node = null;
+    @property(cc.Prefab)
+    hintPointPrefab:cc.Prefab = null;
 
     @property(cc.Prefab)
     trapPrefab:cc.Prefab = null;
@@ -34,6 +34,7 @@ export default class NewClass extends cc.Component {
     eggCount:number;
     eggCounts:cc.Node[] = [];
     arrow:cc.Node = null;
+    hintPoints:cc.Node[] = [];
 
     onLoad () {
       this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart.bind(this));
@@ -46,7 +47,7 @@ export default class NewClass extends cc.Component {
 
     start () {
       this.level = 0;
-      this.eggCount = 5;
+      this.eggCount = 10;
       this.initTrapCoords();
       this.spawnTrapCoords();
       this.drawEggCount();
@@ -58,6 +59,14 @@ export default class NewClass extends cc.Component {
       this.arrow = cc.instantiate(this.arrowPrefab);
       this.node.addChild(this.arrow);
       this.arrow.active = false;
+
+      // init hint points
+      for (let i = 0; i < 10; i++) {
+        let hint = cc.instantiate(this.hintPointPrefab);
+        this.node.addChild(hint);
+        this.hintPoints.push(hint);
+        hint.active = false;
+      }
     }
 
     initTrapCoords () {
@@ -91,13 +100,16 @@ export default class NewClass extends cc.Component {
       
       let vec = new cc.Vec2(startLoc.x - loc.x, startLoc.y - loc.y);
 
+      // show hint point
+      this.showHintPoint(vec, this.player.position);
+
       // show arrow
-      let arrowAngle = Math.atan2(vec.y, vec.x) * 180 / Math.PI;
-      this.arrow.rotation = -(arrowAngle - 90);
-      this.arrow.active = true;
-      this.arrow.anchorY = 1;
-      this.arrow.height = vec.mag();
-      this.arrow.position = startLoc;
+      // let arrowAngle = Math.atan2(vec.y, vec.x) * 180 / Math.PI;
+      // this.arrow.rotation = -(arrowAngle - 90);
+      // this.arrow.active = true;
+      // this.arrow.anchorY = 1;
+      // this.arrow.height = vec.mag();
+      // this.arrow.position = startLoc;
     }
 
     onTouchEnd (touch: cc.Event.EventTouch) {
@@ -109,6 +121,9 @@ export default class NewClass extends cc.Component {
 
       // hide arrow
       this.arrow.active = false;
+
+      // hide hint point
+      this.hideHintPoint();
     }
 
     update (dt) {
@@ -169,5 +184,22 @@ export default class NewClass extends cc.Component {
 
     checkLoss () {
       return this.eggCount === 0 && this.player.y < this.goal.y;
+    }
+
+    showHintPoint (vec:cc.Vec2, startPoint:cc.Vec2) {
+      let length = vec.mag();
+      let distance = length / this.hintPoints.length;
+
+      for (let i = 0; i < this.hintPoints.length; i++) {
+        this.hintPoints[i].active = true;
+        let point = vec.normalize().mul(i * distance).add(startPoint);
+        this.hintPoints[i].position = point;
+      }
+    }
+
+    hideHintPoint () {
+      for (let hint of this.hintPoints) {
+        hint.active = false;
+      }
     }
 }

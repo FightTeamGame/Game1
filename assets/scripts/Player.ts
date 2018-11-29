@@ -1,6 +1,5 @@
 
 const {ccclass, property} = cc._decorator;
-const SPEED_FAC = 400;
 const MOVE_DURATION = 1;
 const FRICTION_FORCE = 500;
 const EGG_SPEED = 200;
@@ -12,9 +11,13 @@ const GRAVITY = 60;
 import InGame from './InGame';
 import Egg from './Egg';
 import * as Ultil from './Ultil';
+import GameSetting from './GameSetting';
 
 @ccclass
 export default class NewClass extends cc.Component {
+
+  @property(cc.Node)
+  gameSetting:cc.Node = null;
 
   @property(cc.Node)
   world:cc.Node = null;
@@ -32,6 +35,7 @@ export default class NewClass extends cc.Component {
   startPos:cc.Vec2;
   frictionForce:number;
   isShooted:boolean;
+  setting:GameSetting;
 
   onLoad () {
   }
@@ -44,6 +48,7 @@ export default class NewClass extends cc.Component {
     this.startPos = this.node.position.clone();
     this.frictionForce = FRICTION_FORCE;
     this.isShooted = false;
+    this.setting = this.gameSetting.getComponent(GameSetting);
   }
 
   shoot (vec:cc.Vec2) {
@@ -54,7 +59,7 @@ export default class NewClass extends cc.Component {
     // this.startPos = this.node.position.clone();
     this.direction = vec.normalize();
 
-    this.speed = vec.mag() + SPEED_FAC;
+    this.speed = vec.mag() * this.setting.playerSpeedFac;
     // this.moveTime = 0;
     this.isMoving = true;
     this.frictionForce = FRICTION_FORCE;
@@ -85,7 +90,7 @@ export default class NewClass extends cc.Component {
 
   calculateStopPosition (vec:cc.Vec2) : cc.Vec2 {
     let direction = vec.normalize();
-    let speed = vec.mag() + SPEED_FAC;
+    let speed = vec.mag() * this.setting.playerSpeedFac;
 
     let s = direction.mul(speed).mul(MOVE_DURATION);
     let stopPos = this.node.position.add(s);
