@@ -36,8 +36,8 @@ export default class NewClass extends cc.Component {
     arrow:cc.Node = null;
     hintPoints:cc.Node[] = [];
 
-    touchStartLoc:cc.Vec2 = null;
-    touchEndLoc:cc.Vec2 = null;
+    touchStartLoc:cc.Vec2 = new cc.Vec2(1, 1);
+    touchEndLoc:cc.Vec2 = new cc.Vec2(0, 0);
 
     onLoad () {
       this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart.bind(this));
